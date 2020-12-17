@@ -6,7 +6,7 @@ LIBS =
 LIBSDIR = 
 
 # fichiers du projet
-SRC = main.c TicketToRideAPI.c clientAPI.c LoopOfGame.c Look.c initialisation.c
+SRC = main.c TicketToRideAPI.c clientAPI.c LoopOfGame.c Look.c initialisation.c initObj.c fonctions.c filInfo.c
 OBJ = $(SRC:.c=.o)
 EXEC = T2R_lExe.out
 
@@ -15,12 +15,18 @@ EXEC = T2R_lExe.out
 all: $(EXEC)
 
 # dépendance des .h
-main.o: clientAPI.h TicketToRideAPI.h LoopOfGame.h the_struct.h look.h initialisation.h
+main.o: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+
+
+LoopOfGame.o: clientAPI.h TicketToRideAPI.h headers.h
+Look.o: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+initObj: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+initialisation.o: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+fonctions: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+filInfo.c: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+
 TicketToRideAPI.o: clientAPI.h TicketToRideAPI.h
 clientAPI.o: clientAPI.h
-LoopOfGame.o: LoopOfGame.h clientAPI.h TicketToRideAPI.h look.h
-Look.o: clientAPI.h TicketToRideAPI.h LoopOfGame.h the_struct.h look.h
-initialisation.o: clientAPI.h TicketToRideAPI.h the_struct.h initialisation.h
 
 # règles de compilation
 %.o: %.c

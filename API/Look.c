@@ -3,18 +3,19 @@
 #include <string.h>
 #include "clientAPI.h"
 #include "TicketToRideAPI.h"
-#include "LoopOfGame.h"
 #include "the_struct.h"
-#include "look.h"
+#include "headers.h"
+
 
 
 
 void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
-	printf("Le nombre de villes:%d \n",LePlateau->nbCities);
-	printf("Le nombre de vois:%d \n",LePlateau->nbTracks);
+	printf("Le nombre de villes:%d \n",generalInfo->theGameBoard->nbCities); 	//LePlateau->nbCities);
+	printf("Le nombre de vois:%d \n",generalInfo->theGameBoard->nbTracks);
+	
 	for (int i = 0; i < 5; ++i)
 	{
-		printf("exemple un track %d \n",LePlateau->TabOfTracks[i]);
+		printf("exemple un track %d \n",generalInfo->theGameBoard->TabOfTracks[i]);
 	}
 	
 
@@ -24,7 +25,13 @@ void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
 	{
 		printf(" couleur:%d nombre:%d \n", i , YOU->TabOfCards[i] );
 	}
-	//printf("objectif\n");
+	printf("%d objectif\n", YOU->nbObective);
+
+	for (int i = 0; i < YOU->nbObective; ++i)
+	{
+		printf("objectif num:%d ville:%d a ville:%d valeur:%d \n",i,YOU->TabOfObjetive[i].city1,YOU->TabOfObjetive[i].city2,YOU->TabOfObjetive[i].score);
+	}
+
 
 	printf("au tour du joueur %d \n",generalInfo->PlayerTurn);
 	for (int i = 0; i < 5; ++i)

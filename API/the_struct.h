@@ -14,14 +14,15 @@ typedef struct{		/* player info*/
 	int nbWagons;
 	int nbCards;
 	t_color TabOfCards[10];		/*{NONE,PURPLE,WHITE,BLUE,YELLOW,ORANGE,BLACK,RED,GREEN,MULTICOLOR};*/
+	int nbObective;
 	t_objective TabOfObjetive[20];
 } t_Player;
 
 typedef struct{		/* player info*/
 	int PlayerTurn;		/* player who is the turn*/
 	int YourNumber;		/* your number normally you are 0*/
-	t_color faceUp[5];
-	t_Game_Board theGameBoard;
+	t_color faceUp[5];	/* the 5 visible cards*/
+	t_Game_Board* theGameBoard;
 	int TwoPlayer[2];
 } t_GeneralInfo;
 

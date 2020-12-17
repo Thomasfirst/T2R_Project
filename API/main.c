@@ -3,10 +3,9 @@
 #include <string.h>
 #include "clientAPI.h"
 #include "TicketToRideAPI.h"
-#include "LoopOfGame.h"
 #include "the_struct.h"
-#include "look.h"
-#include "initialisation.h"
+#include "headers.h"
+
 
 int main()
 {
@@ -21,7 +20,7 @@ int main()
 
 	initialisation(&LePlateau,&YOU,&ENNEMIE,&generalInfo);
 	
-	LoopOfGame(&generalInfo.PlayerTurn);
+	LoopOfGame(&generalInfo,&YOU,&ENNEMIE);
 
 	showMe(&LePlateau,&YOU,&generalInfo);
 	
@@ -29,6 +28,7 @@ int main()
 
 
 	closeConnection();
-
+	
+	free(LePlateau.TabOfTracks);
 	return 0;
 }

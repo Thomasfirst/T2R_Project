@@ -15,12 +15,12 @@ t_return_code playTheMove(t_move* move){
 		TestPassWinLose = claimRoute(move->claimRoute.city1,move->claimRoute.city2,move->claimRoute.color,move->claimRoute.nbLocomotives);
 	}
 
-	if (move->type==2)
+	if (move->type==3)
 	{
 		TestPassWinLose=drawCard(move->drawCard.card, move->drawCard.faceUp );
 	}
 
-	if (move->type==3)
+	if (move->type==2)
 	{
 		TestPassWinLose=drawBlindCard(&move->drawBlindCard.card);
 	}

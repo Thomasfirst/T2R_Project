@@ -13,22 +13,28 @@
 // 	Player->TabOfCards
 // }
 
-void filOjective(t_move* move,t_move* move2,t_Player* YOU){
+void filOjective(t_GeneralInfo* generalInfo,t_move* move,t_move* move2,t_Player* YOU){
 	for (int i = 0; i < 3; ++i)
 	{
-		printf("%d tour\n", i );
-		if (move2->chooseObjectives.chosen[i] == 1)
+		if (move2->chooseObjectives.chosen[i] != 0)
 		{
-			printf("ENRTREE\n");
 			YOU->nbObective = YOU->nbObective + 1;
-			YOU->TabOfObjetive[YOU->nbObective - 1] = move->drawObjectives.objectives[i];
+			if (generalInfo->PlayerTurn==0)
+			{
+				YOU->TabOfObjetive[YOU->nbObective - 1] = move->drawObjectives.objectives[i];
+			}
 		}
 	}
 }
 
-void filBlindCard(t_move* move,t_Player* YOU){
-	YOU->TabOfCards[move->drawBlindCard.card] += 1;
-	YOU->nbCards += 1;
+void filBlindCard(t_GeneralInfo* generalInfo,t_move* move,t_Player* YOU){
+	if (generalInfo->PlayerTurn==0)
+	{
+		YOU->TabOfCards[move->drawBlindCard.card] += 1;
+	}
+		YOU->nbCards += 1;
+	
+	
 }
 
 void filCard(t_move* move,t_Player* YOU,t_GeneralInfo* generalInfo){
@@ -71,9 +77,11 @@ void filClaimRoad(t_GeneralInfo* generalInfo, t_move* move,t_Player* YOU){
 			}
 			else if (generalInfo->PlayerTurn==1)
 			{
-				YOU->nbCards = YOU->nbCards	- generalInfo->theGameBoard->TabOfTracks[j*5 + 3];		/*nb of cards - the lenght */
+				YOU->nbCards = YOU->nbCards	- generalInfo->theGameBoard->TabOfTracks[j*5 + 2];		/*nb of cards - the lenght */
 
-				generalInfo->theGameBoard->TabOfTracks[j*5 + 3] = -2;
+				generalInfo->theGameBoard->TabOfTracks[j*5 + 2] = -2;
+
+				YOU->nbWagons = YOU->nbWagons - generalInfo->theGameBoard->TabOfTracks[j*5 + 2];	/*sub the lenght (+2 for the number of wagon)*/
 			}
 		}
 	}

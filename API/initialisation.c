@@ -15,7 +15,7 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 	char name[] = "testingBot";
 
 	char gameName[] = "TestDePartieThomas";
-	char gameType[] = "TRAINING DO_NOTHING map=USA";
+	char gameType[] = "TRAINING PLAY_RANDOM map=USA start=0";
 	
 	/*t_Game_Board LePlateau;		 describe struct t_Game_Board*/
 	LePlateau->nbCities=0;
@@ -31,6 +31,7 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 		/*t_Player YOU;		your info*/
 	YOU->nbWagons=45;
 	YOU->nbCards=4;
+	YOU->nbObective=0;
 	for (t_color i = 0; i < 10; ++i)
 		YOU->TabOfCards[i]=0;
 	// t_objective TabOfObjetive[20];
@@ -38,6 +39,7 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 		/*t_Player ENNEMIE;		ennemie info*/
 	ENNEMIE->nbWagons=45;
 	ENNEMIE->nbCards=4;
+	ENNEMIE->nbObective=0;
 	for (t_color i = 0; i < 10; ++i)
 		ENNEMIE->TabOfCards[i]=0;
 	// t_objective TabOfObjetive[20];
@@ -64,6 +66,6 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 	YOU->TabOfCards[cards[3]]+=1;
 
 
-	initObj(YOU,generalInfo);
+	initObj(YOU,generalInfo,ENNEMIE);
 
 }

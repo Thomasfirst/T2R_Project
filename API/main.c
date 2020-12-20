@@ -23,6 +23,9 @@ int main()
 	LoopOfGame(&generalInfo,&YOU,&ENNEMIE);
 
 	showMe(&LePlateau,&YOU,&generalInfo);
+	printf("ENNEMIE\n");
+	showMe(&LePlateau,&ENNEMIE,&generalInfo);
+
 	
 
 

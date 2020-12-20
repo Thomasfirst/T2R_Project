@@ -7,7 +7,7 @@
 #include "headers.h"
 
 
-void initObj(t_Player* YOU,t_GeneralInfo* generalInfo){		// now take the two objecctive with the less points
+void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// now take the two objecctive with the less points
 	int replay=1;
 	t_move* move = malloc(sizeof(t_move));
 	t_move* move2 = malloc(sizeof(t_move));
@@ -20,8 +20,10 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo){		// now take the two obj
 		// t_return_code getMove(t_move* move, int* replay);
 		TestPassWinLose = getMove(move,&replay);
 		if(replay)
-			TestPassWinLose = getMove(move,&replay);
+			TestPassWinLose = getMove(move2,&replay);
 		generalInfo->PlayerTurn=0;
+		filOjective(generalInfo,move,move2,ENNEMIE);
+		lookMove(move);
 
 
 		//t_return_code validity = drawObjectives(t_objective obj[3]);

@@ -39,3 +39,40 @@ void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
 		printf("couleur sur la table :%d \n", generalInfo->faceUp[i] );
 	}
 }
+
+void lookMove(t_move* move){
+
+	if (move->type==1)
+	{
+		printf("la route \n %d à %dest pris\ncouleur:%d avec %d multicolor\n",
+				 move->claimRoute.city1,move->claimRoute.city2,move->claimRoute.color,move->claimRoute.nbLocomotives);
+	}
+
+	if (move->type==3)
+	{
+		printf("couleur %d prise\n", move->drawCard.card );
+		for (int i = 0; i < 5; ++i)
+		{
+			printf("couleur sur la table :%d \n", move->drawCard.faceUp[i] );
+		}
+	}
+
+	if (move->type==2)
+	{
+		printf("prise a l'aveugle %d \n", move->drawBlindCard.card);
+	}
+
+	if (move->type==4)
+	{
+		printf(" objectif pris\n");		
+	}	
+
+	if (move->type==5)
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			printf(" objectif%d =%d \n",i , move->chooseObjectives.chosen[i] != 0);
+		}
+	}
+	
+}

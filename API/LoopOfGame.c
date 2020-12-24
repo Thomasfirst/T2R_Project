@@ -16,11 +16,17 @@ void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 	int replay=1;
 	t_return_code TestPassWinLose = 0;
 
+	t_road roadToPlace;
+
 	int ScanAction = 0;		// for claim a road 
 	int ScanAction2 = 0;	
 
 	while(TestPassWinLose == 0){
 		printMap();
+		roadToPlace = algo_one_road( YOU->TabOfObjetive[0], generalInfo);
+
+		int test = chooseColor(YOU->TabOfObjetive[0], generalInfo, YOU);
+
 		if (generalInfo->PlayerTurn==0)
 		{
 			printf("Decrire action\n" );
@@ -175,6 +181,336 @@ void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				{
 					filOjective(generalInfo,move,move2,ENNEMIE);;
 				}
+			}
+		}
+	}
+	free(move);
+	free(move2);
+
+}
+
+
+
+
+void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
+	// t_move move ;//
+	t_move* move = malloc(sizeof(t_move));
+	t_move* move2 = malloc(sizeof(t_move));
+
+	int replayEnnemie=1;
+
+	int replayYou=1;
+
+	t_return_code TestPassWinLose = 0;
+
+	t_road roadToPlace;
+
+	int colorIfNoColor;
+
+	int finishObjective = 0;
+
+	int colorToDraw = 0; 
+
+	while(TestPassWinLose == 0){
+		printMap();
+
+		replayYou=2;
+
+		for (int iObj = 0; iObj < YOU->nbObective; ++iObj)		/* complete objective */
+		{
+			roadToPlace = algo_one_road( YOU->TabOfObjetive[iObj], generalInfo);
+			colorToDraw = chooseColorIfNotTheFirst( YOU->TabOfObjetive[iObj], generalInfo);
+			colorIfNoColor = chooseColor( YOU->TabOfObjetive[iObj], generalInfo, YOU);
+			
+
+			if ( (roadToPlace.city2 == -2) && (roadToPlace.city1 == -2))	/* the last objective complete*/
+			{
+				if (iObj -1 < 0)
+				{
+					finishObjective = 1;		/* all objective finish*/
+					break;
+				}
+				roadToPlace = algo_one_road( YOU->TabOfObjetive[iObj -1], generalInfo);	/*next objective*/
+				colorToDraw = chooseColorIfNotTheFirst( YOU->TabOfObjetive[iObj - 1], generalInfo);
+				colorIfNoColor = chooseColor( YOU->TabOfObjetive[iObj -1], generalInfo, YOU);
+				break;
+			}
+		}
+		
+
+		if (generalInfo->PlayerTurn==0)
+		{
+			if (finishObjective == 0)
+			{
+			
+				/* claim road */
+				if (roadToPlace.color1 == 9)	/* if no color*/
+				{
+					if ((YOU->TabOfCards[colorIfNoColor] + YOU->TabOfCards[9] >= roadToPlace.length) && (YOU->nbWagons >= roadToPlace.length))
+					{
+						move->type=1;
+
+						move->claimRoute.city1 = roadToPlace.city1;
+						move->claimRoute.city2 = roadToPlace.city2;
+						move->claimRoute.color = colorIfNoColor;	//si c 0 mettre 9 pour que des locomotive ouu mettre un nombre de cartre min
+						move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+						TestPassWinLose = playTheMove(move);
+						filClaimRoad(generalInfo,move,YOU);
+						replayYou = 0;
+					}
+					else if ((YOU->TabOfCards[colorIfNoColor] >= roadToPlace.length) &&(YOU->nbWagons >= roadToPlace.length))
+					{
+						move->type=1;
+
+						move->claimRoute.city1 = roadToPlace.city1;
+						move->claimRoute.city2 = roadToPlace.city2;
+						move->claimRoute.color = colorIfNoColor;
+						move->claimRoute.nbLocomotives = 0;	
+
+						TestPassWinLose = playTheMove(move);
+						filClaimRoad(generalInfo,move,YOU);
+						replayYou = 0;
+					}
+				}
+
+				else if ((YOU->TabOfCards[roadToPlace.color1] >= roadToPlace.length)&&(YOU->nbWagons >= roadToPlace.length))	/*if color1 for the road*/
+				{
+					move->type=1;
+
+					move->claimRoute.city1 = roadToPlace.city1;
+					move->claimRoute.city2 = roadToPlace.city2;
+					move->claimRoute.color = roadToPlace.color1;
+					move->claimRoute.nbLocomotives = 0;	
+
+					TestPassWinLose = playTheMove(move);
+					filClaimRoad(generalInfo,move,YOU);
+					replayYou = 0;
+				}
+				else if ((YOU->TabOfCards[roadToPlace.color1] + YOU->TabOfCards[9] >= roadToPlace.length)&&(YOU->nbWagons >= roadToPlace.length))	/*if color1 + multicilorCards for the road*/
+				{
+					move->type=1;
+
+					move->claimRoute.city1 = roadToPlace.city1;
+					move->claimRoute.city2 = roadToPlace.city2;
+					move->claimRoute.color = roadToPlace.color1;
+					move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+					TestPassWinLose = playTheMove(move);
+					filClaimRoad(generalInfo,move,YOU);
+					replayYou = 0;
+				}
+
+				else if (((YOU->TabOfCards[roadToPlace.color2] >= roadToPlace.length) &&(YOU->nbWagons >= roadToPlace.length))	
+						&& (roadToPlace.color2 != 0))/*if color2 + multicilorCards for the road*/
+				{
+					move->type=1;
+
+					move->claimRoute.city1 = roadToPlace.city1;
+					move->claimRoute.city2 = roadToPlace.city2;
+					move->claimRoute.color = roadToPlace.color2;
+					move->claimRoute.nbLocomotives = 0;	
+
+					TestPassWinLose = playTheMove(move);
+					filClaimRoad(generalInfo,move,YOU);
+					replayYou = 0;
+				}
+				else if (((YOU->TabOfCards[roadToPlace.color2] + YOU->TabOfCards[9] >= roadToPlace.length)&&(YOU->nbWagons >= roadToPlace.length))
+						&& (roadToPlace.color2 != 0))	/*if color2 for the road*/
+				{
+					move->type=1;
+
+					move->claimRoute.city1 = roadToPlace.city1;
+					move->claimRoute.city2 = roadToPlace.city2;
+					move->claimRoute.color = roadToPlace.color2;
+					move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+					TestPassWinLose = playTheMove(move);
+					filClaimRoad(generalInfo,move,YOU);
+					replayYou = 0;
+				}
+
+				/*-----*/
+				/* draw the cards */
+				
+				if (replayYou == 2)		/* draw the color we need now for the road*/
+				{
+					for (int i = 0; i < 5; ++i)
+					{
+						if( ((generalInfo->faceUp[i] == roadToPlace.color1) || (generalInfo->faceUp[i] == roadToPlace.color2))
+							 && (generalInfo->faceUp[i] != 9) )
+						{
+							move->type=3;
+							move->drawCard.card = generalInfo->faceUp[i];
+							lookMove(move);
+							TestPassWinLose = playTheMove(move);
+							filCard(move,YOU,generalInfo);
+							replayYou -= 1;	/* 2 main you can play again*/
+							break;
+						}
+					}
+					if (replayYou==1)	/* 2nd draw */
+					{
+						for (int i = 0; i < 5; ++i)
+						{
+							if( ((generalInfo->faceUp[i] == roadToPlace.color1) || (generalInfo->faceUp[i] == roadToPlace.color2))
+								&& (generalInfo->faceUp[i] != 9) )
+							{
+								move->type=3;
+								move->drawCard.card = generalInfo->faceUp[i];
+								lookMove(move);
+								TestPassWinLose = playTheMove(move);
+								filCard(move,YOU,generalInfo);
+								replayYou -= 1;	/* 2 main you can play again*/
+								break;
+							}
+						}
+					}	
+				}
+
+				/*-----*/
+
+				if ((replayYou == 2)&& (colorToDraw != 0))	/* drawn an other road we need for objective*/
+				{
+					printf("%d colorToDraw\n", colorToDraw);
+					for (int i = 0; i < 5; ++i) /*found a card we need*/
+					{
+						if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+						{
+							move->type=3;
+							move->drawCard.card = generalInfo->faceUp[i];
+							lookMove(move);
+							TestPassWinLose = playTheMove(move);
+							filCard(move,YOU,generalInfo);
+							replayYou -= 1;	/* 2 main you can play again*/
+							break;
+						}
+					}
+					// if ((replayYou==1)&& (colorToDraw != 0))	/* 2nd draw */
+					// {
+					// 	for (int i = 0; i < 5; ++i)
+					// 	{
+					// 		if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+					// 		{
+					// 			move->type=3;
+					// 			move->drawCard.card = generalInfo->faceUp[i];
+					// 			lookMove(move);
+					// 			TestPassWinLose = playTheMove(move);
+					// 			filCard(move,YOU,generalInfo);
+					// 			replayYou -= 1;	/* end move*/
+					// 			break;
+					// 		}
+					// 	}
+					// }	
+				}
+				else if ((replayYou == 1)&& (colorToDraw != 0))	/* if we have only 1 move found a card we need*/
+				{
+					printf("%d colorToDraw\n", colorToDraw);
+					for (int i = 0; i < 5; ++i)
+					{
+						if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+						{
+							move->type=3;
+							move->drawCard.card = generalInfo->faceUp[i];
+							lookMove(move);
+							TestPassWinLose = playTheMove(move);
+							filCard(move,YOU,generalInfo);
+							replayYou -= 1;	/* end move*/
+							break;
+						}
+					}
+				}
+
+
+				/*-----*/
+
+				if (replayYou == 2)	/* draw blind if ne other chose x2 */
+				{
+					move->type=2;
+					TestPassWinLose = playTheMove(move);
+					filBlindCard(generalInfo,move,YOU);	
+					lookMove(move);
+
+					replayYou -= 1;
+
+					move->type=2;
+					TestPassWinLose = playTheMove(move);
+					filBlindCard(generalInfo,move,YOU);	
+					lookMove(move);
+
+					replayYou -= 1;
+				}
+				if (replayYou == 1) /* draw blind if ne other chose x1 */
+				{
+					move->type=2;
+					TestPassWinLose = playTheMove(move);
+					filBlindCard(generalInfo,move,YOU);	
+					lookMove(move);
+
+					replayYou -= 1;
+				}
+			
+			}
+
+			if (finishObjective == 1)
+			{
+				printf("OMG CA FONCTIONNE \nOMG CA FONCTIONNE \nOMG CA FONCTIONNE \n");
+			}
+
+
+				//-------------------
+
+			generalInfo->PlayerTurn=1;	
+		}
+
+		else {
+			if (generalInfo->PlayerTurn==1)
+			{
+				printf("ENNEMIE\n");
+				// t_return_code getMove(t_move* move, int* replay);
+				TestPassWinLose = getMove(move,&replayEnnemie);
+				lookMove(move);
+				if (move->type==1)
+				{
+					filClaimRoad(generalInfo,move,ENNEMIE);
+				}
+				if (move->type==2)
+				{
+					filBlindCard(generalInfo,move,ENNEMIE);
+				}
+				if (move->type==3)
+				{
+					filCard(move,ENNEMIE,generalInfo);	
+				}
+				if (move->type==4)
+				{
+					replayEnnemie=1;	//take objectiv
+				}
+
+		
+				if(replayEnnemie)
+					TestPassWinLose = getMove(move2,&replayEnnemie);
+
+				lookMove(move2);
+				if (move2->type==1)
+				{
+					filClaimRoad(generalInfo,move2,ENNEMIE);
+				}
+				if (move2->type==2)
+				{
+					filBlindCard(generalInfo,move2,ENNEMIE);
+				}
+				if (move2->type==3)
+				{
+					filCard(move2,ENNEMIE,generalInfo);	
+				}
+				if (move2->type==5)
+				{
+					filOjective(generalInfo,move,move2,ENNEMIE);;
+				}
+
+				generalInfo->PlayerTurn=0;
+
 			}
 		}
 	}

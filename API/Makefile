@@ -6,7 +6,7 @@ LIBS =
 LIBSDIR = 
 
 # fichiers du projet
-SRC = main.c TicketToRideAPI.c clientAPI.c LoopOfGame.c Look.c initialisation.c initObj.c fonctions.c filInfo.c
+SRC = main.c TicketToRideAPI.c clientAPI.c LoopOfGame.c Look.c initialisation.c initObj.c fonctions.c filInfo.c chooseMove.c
 OBJ = $(SRC:.c=.o)
 EXEC = T2R_lExe.out
 
@@ -24,6 +24,7 @@ initObj: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
 initialisation.o: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
 fonctions: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
 filInfo.c: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
+chooseMove.c: clientAPI.h TicketToRideAPI.h the_struct.h headers.h
 
 TicketToRideAPI.o: clientAPI.h TicketToRideAPI.h
 clientAPI.o: clientAPI.h

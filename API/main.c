@@ -17,14 +17,21 @@ int main()
 	t_Player ENNEMIE;
 
 	t_GeneralInfo generalInfo;
+	
 
 	initialisation(&LePlateau,&YOU,&ENNEMIE,&generalInfo);
+
+	initObj(&YOU,&generalInfo,&ENNEMIE);
+
+
+
 	
-	LoopOfGame(&generalInfo,&YOU,&ENNEMIE);
+	LoopOfGameAuto(&generalInfo,&YOU,&ENNEMIE);
 
 	showMe(&LePlateau,&YOU,&generalInfo);
-	printf("ENNEMIE\n");
-	showMe(&LePlateau,&ENNEMIE,&generalInfo);
+
+	//printf("ENNEMIE\n");
+	//showMe(&LePlateau,&ENNEMIE,&generalInfo);
 
 	
 
@@ -32,6 +39,7 @@ int main()
 
 	closeConnection();
 	
-	free(LePlateau.TabOfTracks);
+	free(generalInfo.theGameBoard->TabOfTracks);
+	
 	return 0;
 }

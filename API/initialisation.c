@@ -15,7 +15,7 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 	char name[] = "testingBot";
 
 	char gameName[] = "TestDePartieThomas";
-	char gameType[] = "TRAINING PLAY_RANDOM map=USA start=0";
+	char gameType[] = "TRAINING PLAY_RANDOM map=USA start=0 timeout=80";
 	
 	/*t_Game_Board LePlateau;		 describe struct t_Game_Board*/
 	LePlateau->nbCities=0;
@@ -57,15 +57,27 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 	for (int i = 0; i < LePlateau->nbTracks*5; ++i)
 		tracks[i]=0;
 
-	LePlateau->TabOfTracks=tracks;		/*arrray of the tracks*/
 	// getMap(int* tracks, t_color faceUp[5], t_color cards[4]);
-	generalInfo->PlayerTurn = getMap(generalInfo->theGameBoard->TabOfTracks, generalInfo->faceUp, cards);
+	generalInfo->PlayerTurn = getMap(tracks, generalInfo->faceUp, cards);
 	YOU->TabOfCards[cards[0]]+=1;		/*import the 4 first draw*/
 	YOU->TabOfCards[cards[1]]+=1;
 	YOU->TabOfCards[cards[2]]+=1;
 	YOU->TabOfCards[cards[3]]+=1;
 
+		/*initilisation of tab of t_road*/
+	t_road* tracksRoad = malloc((LePlateau->nbTracks) * sizeof(t_road));		/*arrray of the t_road*/
+	for (int i = 0; i < LePlateau->nbTracks; ++i)
+	{
+		tracksRoad[i].city1 = tracks[i*5];
+		tracksRoad[i].city2 = tracks[i*5+1];
+		tracksRoad[i].length = tracks[i*5+2];
+		tracksRoad[i].ocupation = 0;
+		tracksRoad[i].color1 = tracks[i*5+3];
+		tracksRoad[i].color2 = tracks[i*5+4];
+	}
+	LePlateau->TabOfTracks=tracksRoad;	
 
-	initObj(YOU,generalInfo,ENNEMIE);
+	free(tracks);
+		
 
 }

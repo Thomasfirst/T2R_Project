@@ -3,11 +3,19 @@
 #include "TicketToRideAPI.h"
 #include "clientAPI.h"
 
+typedef struct {
+	int city1;
+	int city2;
+	int length;
+	int ocupation;	/* -1 ennemie; 1 you ; 0free*/
+	t_color color1;
+	t_color color2;
+}t_road;
 
 typedef struct{		/* Nb ville Nb route tab des route*/
 	int nbCities;
 	int nbTracks;
-	int* TabOfTracks;
+	t_road* TabOfTracks;
 } t_Game_Board;
 
 typedef struct{		/* player info*/
@@ -25,7 +33,6 @@ typedef struct{		/* player info*/
 	t_Game_Board* theGameBoard;
 	int TwoPlayer[2];
 } t_GeneralInfo;
-
 
 
 #endif

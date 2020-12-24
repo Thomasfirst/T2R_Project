@@ -19,11 +19,16 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 	{
 		// t_return_code getMove(t_move* move, int* replay);
 		TestPassWinLose = getMove(move,&replay);
+		lookMove(move);
 		if(replay)
 			TestPassWinLose = getMove(move2,&replay);
+		lookMove(move2);
+		if ((move2->type==5)&&(move->type==4))
+			{
+				filOjective(generalInfo,move,move2,ENNEMIE);
+			}
 		generalInfo->PlayerTurn=0;
-		filOjective(generalInfo,move,move2,ENNEMIE);
-		lookMove(move);
+
 
 
 		//t_return_code validity = drawObjectives(t_objective obj[3]);

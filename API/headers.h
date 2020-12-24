@@ -14,6 +14,9 @@ void lookMove(t_move* move);
 
 void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE);
 
+void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE);
+
+
 t_return_code playTheMove(t_move* move);
 
 void filOjective(t_GeneralInfo* generalInfo,t_move* move,t_move* move2,t_Player* YOU);
@@ -24,6 +27,19 @@ void filCard(t_move* move,t_Player* YOU,t_GeneralInfo* generalInfo);
 
 void filClaimRoad(t_GeneralInfo* generalInfo, t_move* move,t_Player* YOU);
 
+int distanceMin(int* D, int* visite, t_GeneralInfo* generalInfo);
+
+int* algo(t_objective objective, t_GeneralInfo* generalInfo);
+
+t_road algo_one_road(t_objective objective, t_GeneralInfo* generalInfo);
+
+int chooseColor(t_objective objective, t_GeneralInfo* generalInfo, t_Player* YOU);
+
+int chooseColorIfNotTheFirst(t_objective objective, t_GeneralInfo* generalInfo);
+
+
+
+void trueAlgo(t_objective objective, t_GeneralInfo* generalInfo);
 
 
 

@@ -15,7 +15,13 @@ void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
 	
 	for (int i = 0; i < 5; ++i)
 	{
-		printf("exemple un track %d \n",generalInfo->theGameBoard->TabOfTracks[i]);
+		printf("exemple un track %d, %d, taille%d, ocup%d, color1%d, color2%d \n",
+										generalInfo->theGameBoard->TabOfTracks[i].city1,
+										generalInfo->theGameBoard->TabOfTracks[i].city2,
+										generalInfo->theGameBoard->TabOfTracks[i].length,
+										generalInfo->theGameBoard->TabOfTracks[i].ocupation,
+										generalInfo->theGameBoard->TabOfTracks[i].color1,
+										generalInfo->theGameBoard->TabOfTracks[i].color2);
 	}
 	
 

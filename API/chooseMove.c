@@ -174,8 +174,8 @@ int chooseColor(t_objective objective, t_GeneralInfo* generalInfo, t_Player* YOU
 					roadToPlace.color2 = generalInfo->theGameBoard->TabOfTracks[tour].color2;
 
 						/* mark the color we going to use */ 
-					maxColorCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] += 1;
-					maxColorCards[generalInfo->theGameBoard->TabOfTracks[tour].color2] += 1;
+					maxColorCards[roadToPlace.color1] += 1;
+					maxColorCards[roadToPlace.color2] += 1;
 				}
 
 				if ((prec[v] == objective.city1) && (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 1))
@@ -185,6 +185,7 @@ int chooseColor(t_objective objective, t_GeneralInfo* generalInfo, t_Player* YOU
 				}
 
 				v = prec[v];	//next
+				break;
 			}
 		}
 	}
@@ -252,8 +253,8 @@ int chooseColorIfNotTheFirst(t_objective objective, t_GeneralInfo* generalInfo){
 					roadToPlace.color2 = generalInfo->theGameBoard->TabOfTracks[tour].color2;
 
 						/* mark the color we going to use */ 
-					maxColorCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] += 1;
-					maxColorCards[generalInfo->theGameBoard->TabOfTracks[tour].color2] += 1;
+					maxColorCards[roadToPlace.color1] += 1;
+					maxColorCards[roadToPlace.color2] += 1;
 				}
 
 				if ((prec[v] == objective.city1) && (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 1))
@@ -263,6 +264,7 @@ int chooseColorIfNotTheFirst(t_objective objective, t_GeneralInfo* generalInfo){
 				}
 
 				v = prec[v];	//next
+				break;
 			}
 		}
 	}
@@ -283,6 +285,325 @@ int chooseColorIfNotTheFirst(t_objective objective, t_GeneralInfo* generalInfo){
 	return indice;
 }
 
+int finishmove(t_move* move, t_GeneralInfo* generalInfo, t_Player* YOU, t_Player* ENNEMIE, int* replay){
+	// replay = 2 start
+	move->type = 2;
+
+	int tab_of_long_road[10];
+	for (int i = 0; i < 10; ++i)
+	{
+		tab_of_long_road[i] = 0;
+	}
+	int nb_road_max=0;
+
+	int maxRoadLength=6;
+
+	int color_we_have_max=0;
+	for (int i = 1; i < 9; ++i)
+	{
+		if (YOU->TabOfCards[i] > YOU->TabOfCards[color_we_have_max])
+		{
+			color_we_have_max = i;
+		}
+	}
+
+
+	if (*replay == 2)
+	{
+		if (ENNEMIE->nbWagons <= 12)
+		{
+			for (int pass_for_min = 6; pass_for_min > 0; --pass_for_min)
+			{
+				for (int tour = 0; tour < generalInfo->theGameBoard->nbTracks; ++tour)
+				{
+					if ((generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+					{
+						if ( generalInfo->theGameBoard->TabOfTracks[tour].color1  != 9)
+						{
+							if ((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color1 ] >= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+								move->claimRoute.nbLocomotives = 0;
+
+								*replay = 0;
+								return 1;
+							}
+
+							if (((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color1 ] + YOU->TabOfCards[9] )
+								>= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+								move->claimRoute.nbLocomotives = YOU->TabOfCards[9];
+
+								*replay = 0;
+								return 1;
+							}
+							if ((((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color2 ] >= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))	
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].color2 != 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].color2 != 9))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color2;
+								move->claimRoute.nbLocomotives = 0;
+
+								*replay = 0;
+								return 1;
+							}
+
+							if (((((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color2 ] + YOU->TabOfCards[9] )
+								>= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].color2 != 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].color2 != 9))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color2;
+								move->claimRoute.nbLocomotives = YOU->TabOfCards[9];
+
+								*replay = 0;
+								return 1;
+							}
+						}
+						else if ((generalInfo->theGameBoard->TabOfTracks[tour].color1 == 9)&&(color_we_have_max != 0)&&(color_we_have_max != 9))
+						{
+							if ((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color1 ] >= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = color_we_have_max;
+								move->claimRoute.nbLocomotives = 0;
+
+								*replay = 0;
+								return 1;
+							}
+
+							if (((((YOU->TabOfCards[ generalInfo->theGameBoard->TabOfTracks[tour].color1 ] + YOU->TabOfCards[9] )
+								>= generalInfo->theGameBoard->TabOfTracks[tour].length)
+								&&(generalInfo->theGameBoard->TabOfTracks[tour].length <= YOU->nbWagons))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+								&& (generalInfo->theGameBoard->TabOfTracks[tour].length == pass_for_min))
+							{
+								move->type = 1;
+
+								move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+								move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+								move->claimRoute.color = color_we_have_max;
+								move->claimRoute.nbLocomotives = YOU->TabOfCards[9];
+
+								*replay = 0;
+								return 1;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if(YOU->nbWagons >= 6)
+		{
+			for (int tour = 0; tour < generalInfo->theGameBoard->nbTracks; ++tour)
+			{
+				if (((generalInfo->theGameBoard->TabOfTracks[tour].length == maxRoadLength) 
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].color1 != 9 ))
+				{
+					tab_of_long_road[generalInfo->theGameBoard->TabOfTracks[tour].color1] += 1;		/*the cards we need*/
+					nb_road_max += 1;
+
+					if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] >= maxRoadLength)	/*play a max point road*/
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = 0;	
+
+						*replay = 0;
+						return 11;
+					}
+					else if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] + YOU->TabOfCards[9] >= maxRoadLength)/*play a max point road*/		
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+						*replay = 0;
+						return 111;
+					}
+				}
+			}
+		}
+		if ((nb_road_max == 0)&&(YOU->nbWagons >= 5))	// length 5
+		{
+			maxRoadLength -= 1;
+
+			for (int tour = 0; tour < generalInfo->theGameBoard->nbTracks; ++tour)
+			{
+				if (((generalInfo->theGameBoard->TabOfTracks[tour].length == maxRoadLength) 
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].color1 != 9 ))
+				{
+					tab_of_long_road[generalInfo->theGameBoard->TabOfTracks[tour].color1] += 1;		/*the carte we need*/
+					nb_road_max += 1;
+
+					if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] >= maxRoadLength)	/*play a max point road*/
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = 0;	
+
+						*replay = 0;
+						return 12;
+					}
+					else if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] + YOU->TabOfCards[9] >= maxRoadLength)	/*play a max point road*/
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+						*replay = 0;
+						return 122;
+					}
+				}
+			}
+		}
+		if ((nb_road_max == 0)&&(YOU->nbWagons >= 4))	// length 4
+		{
+			maxRoadLength -= 1;
+
+			for (int tour = 0; tour < generalInfo->theGameBoard->nbTracks; ++tour)
+			{
+				if (((generalInfo->theGameBoard->TabOfTracks[tour].length == maxRoadLength) 
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].ocupation == 0))
+					&& (generalInfo->theGameBoard->TabOfTracks[tour].color1 != 9 ))
+				{
+					tab_of_long_road[generalInfo->theGameBoard->TabOfTracks[tour].color1] += 1;		/*the carte we need*/
+					nb_road_max += 1;
+
+					if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] >= maxRoadLength)	/*play a max point road*/
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = 0;	
+
+						*replay = 0;
+						return 13;
+					}
+					else if (YOU->TabOfCards[generalInfo->theGameBoard->TabOfTracks[tour].color1] + YOU->TabOfCards[9] >= maxRoadLength)	/*play a max point road*/
+					{
+						move->type = 1;
+
+						move->claimRoute.city1 = generalInfo->theGameBoard->TabOfTracks[tour].city1;
+						move->claimRoute.city2 = generalInfo->theGameBoard->TabOfTracks[tour].city2;
+						move->claimRoute.color = generalInfo->theGameBoard->TabOfTracks[tour].color1;
+						move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
+
+						*replay = 0;
+						return 133;
+					}
+				}
+			}
+		}	
+	}
+	
+
+	if (*replay == 2)
+	{
+		for (int i = 1; i < 9; ++i)
+		{
+			for (int j = 0; j < 5; ++j)
+			{
+				if ((generalInfo->faceUp[j] == i ) && (tab_of_long_road[i] != 0)	
+					&& (YOU->TabOfCards[i] < maxRoadLength))	//draw a card we need
+				{
+					move->type = 3;
+
+					move->drawCard.card = generalInfo->faceUp[j];
+
+					*replay -= 1;
+					return 31;
+				}
+			}
+		}
+	}
+	if (*replay == 1)
+	{
+		for (int i = 1; i < 9; ++i)
+		{
+			for (int j = 0; j < 5; ++j)
+			{
+				if ((generalInfo->faceUp[j] == i ) && (tab_of_long_road[i] != 0)	
+					&& (YOU->TabOfCards[i] < maxRoadLength))	//draw a card we need
+				{
+					move->type = 3;
+
+					move->drawCard.card = generalInfo->faceUp[j];
+
+					*replay -= 1;
+					return 32;
+				}
+			}
+		}
+	}
+
+	if (*replay == 2)
+	{
+		move->type=2;
+		*replay -= 1;
+		return 21;
+	}
+	if (*replay == 1)
+	{
+		move->type=2;
+		*replay -= 1;
+		return 22;
+	}
+
+	return 0;
+}
 
 
 

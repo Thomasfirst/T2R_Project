@@ -218,6 +218,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 
 		for (int iObj = 0; iObj < YOU->nbObective; ++iObj)		/* complete objective */
 		{
+			if(finishObjective==1)
+				break;
 			roadToPlace = algo_one_road( YOU->TabOfObjetive[iObj], generalInfo);
 			colorToDraw = chooseColorIfNotTheFirst( YOU->TabOfObjetive[iObj], generalInfo);
 			colorIfNoColor = chooseColor( YOU->TabOfObjetive[iObj], generalInfo, YOU);
@@ -244,22 +246,10 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 			{
 			
 				/* claim road */
-				if (roadToPlace.color1 == 9)	/* if no color*/
+				if ((roadToPlace.color1 == 9)&&(colorIfNoColor != 0))	/* if no color*/
 				{
-					if ((YOU->TabOfCards[colorIfNoColor] + YOU->TabOfCards[9] >= roadToPlace.length) && (YOU->nbWagons >= roadToPlace.length))
-					{
-						move->type=1;
-
-						move->claimRoute.city1 = roadToPlace.city1;
-						move->claimRoute.city2 = roadToPlace.city2;
-						move->claimRoute.color = colorIfNoColor;	//si c 0 mettre 9 pour que des locomotive ouu mettre un nombre de cartre min
-						move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
-
-						TestPassWinLose = playTheMove(move);
-						filClaimRoad(generalInfo,move,YOU);
-						replayYou = 0;
-					}
-					else if ((YOU->TabOfCards[colorIfNoColor] >= roadToPlace.length) &&(YOU->nbWagons >= roadToPlace.length))
+					
+					if ((YOU->TabOfCards[colorIfNoColor] >= roadToPlace.length) &&(YOU->nbWagons >= roadToPlace.length))
 					{
 						move->type=1;
 
@@ -301,8 +291,10 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					replayYou = 0;
 				}
 
-				else if (((YOU->TabOfCards[roadToPlace.color2] >= roadToPlace.length) &&(YOU->nbWagons >= roadToPlace.length))	
+				else if ((((YOU->TabOfCards[roadToPlace.color2] >= roadToPlace.length) 
+						&&(YOU->nbWagons >= roadToPlace.length))	
 						&& (roadToPlace.color2 != 0))/*if color2 + multicilorCards for the road*/
+						&& (roadToPlace.color2 != 9))
 				{
 					move->type=1;
 
@@ -315,8 +307,10 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					filClaimRoad(generalInfo,move,YOU);
 					replayYou = 0;
 				}
-				else if (((YOU->TabOfCards[roadToPlace.color2] + YOU->TabOfCards[9] >= roadToPlace.length)&&(YOU->nbWagons >= roadToPlace.length))
+				else if ((((YOU->TabOfCards[roadToPlace.color2] + YOU->TabOfCards[9] >= roadToPlace.length)
+						&&(YOU->nbWagons >= roadToPlace.length))
 						&& (roadToPlace.color2 != 0))	/*if color2 for the road*/
+						&& (roadToPlace.color2 != 9))
 				{
 					move->type=1;
 
@@ -346,6 +340,7 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 							TestPassWinLose = playTheMove(move);
 							filCard(move,YOU,generalInfo);
 							replayYou -= 1;	/* 2 main you can play again*/
+							lookMove(move);
 							break;
 						}
 					}
@@ -362,11 +357,13 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 								TestPassWinLose = playTheMove(move);
 								filCard(move,YOU,generalInfo);
 								replayYou -= 1;	/* 2 main you can play again*/
+								lookMove(move);printf("le nb2\n");
 								break;
 							}
 						}
 					}	
 				}
+
 
 				/*-----*/
 
@@ -375,7 +372,7 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					printf("%d colorToDraw\n", colorToDraw);
 					for (int i = 0; i < 5; ++i) /*found a card we need*/
 					{
-						if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+						if ((generalInfo->faceUp[i] == colorToDraw))
 						{
 							move->type=3;
 							move->drawCard.card = generalInfo->faceUp[i];
@@ -386,7 +383,7 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 							break;
 						}
 					}
-					// if ((replayYou==1)&& (colorToDraw != 0))	/* 2nd draw */
+					// if ((replayYou==1)&& (colorToDraw != 0))	/* 2nd draw  add 50% effectivness*/
 					// {
 					// 	for (int i = 0; i < 5; ++i)
 					// 	{
@@ -408,7 +405,7 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					printf("%d colorToDraw\n", colorToDraw);
 					for (int i = 0; i < 5; ++i)
 					{
-						if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+						if ((generalInfo->faceUp[i] == colorToDraw) )
 						{
 							move->type=3;
 							move->drawCard.card = generalInfo->faceUp[i];
@@ -452,9 +449,53 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 			
 			}
 
+			int replayToEnd = 2;// 2 its for 2 move
+			int the_end;
 			if (finishObjective == 1)
 			{
 				printf("OMG CA FONCTIONNE \nOMG CA FONCTIONNE \nOMG CA FONCTIONNE \n");
+
+
+				the_end = finishmove(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
+				printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+				lookMove(move);
+
+				TestPassWinLose = playTheMove(move);
+
+				if (move->type == 1)
+				{
+					filClaimRoad(generalInfo,move,YOU);
+				}
+				if (move->type == 2)
+				{
+					filBlindCard(generalInfo,move,YOU);
+				}
+				if (move->type == 3)
+				{
+					filCard(move,YOU,generalInfo);
+				}
+					
+
+				if (replayToEnd == 1)
+				{
+					the_end = finishmove(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
+					printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+					lookMove(move);
+
+					TestPassWinLose = playTheMove(move);
+					if (move->type == 1)
+					{
+						filClaimRoad(generalInfo,move,YOU);
+					}
+					if (move->type == 2)
+					{
+						filBlindCard(generalInfo,move,YOU);
+					}
+					if (move->type == 3)
+					{
+						filCard(move,YOU,generalInfo);
+					}	
+				}
 			}
 
 
@@ -473,40 +514,49 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				if (move->type==1)
 				{
 					filClaimRoad(generalInfo,move,ENNEMIE);
+					if (replayEnnemie !=0)
+					{
+						printf("L'ENNEMIE TRICHE !!!!!\n");
+						TestPassWinLose =1;
+					}
 				}
-				if (move->type==2)
+				else if (move->type==2)
 				{
 					filBlindCard(generalInfo,move,ENNEMIE);
 				}
-				if (move->type==3)
+				else if (move->type==3)
 				{
 					filCard(move,ENNEMIE,generalInfo);	
 				}
-				if (move->type==4)
+				else if (move->type==4)
 				{
 					replayEnnemie=1;	//take objectiv
 				}
 
 		
-				if(replayEnnemie)
+				if(replayEnnemie){
 					TestPassWinLose = getMove(move2,&replayEnnemie);
+					lookMove(move2);
 
-				lookMove(move2);
-				if (move2->type==1)
-				{
-					filClaimRoad(generalInfo,move2,ENNEMIE);
-				}
-				if (move2->type==2)
-				{
-					filBlindCard(generalInfo,move2,ENNEMIE);
-				}
-				if (move2->type==3)
-				{
-					filCard(move2,ENNEMIE,generalInfo);	
-				}
-				if (move2->type==5)
-				{
-					filOjective(generalInfo,move,move2,ENNEMIE);;
+					if (move2->type==1)
+					{
+						filClaimRoad(generalInfo,move2,ENNEMIE);
+						printf("L'ENNEMIE TRICHE 22!!!!!\n" );
+						TestPassWinLose =1;
+
+					}
+					else if (move2->type==2)
+					{
+						filBlindCard(generalInfo,move2,ENNEMIE);
+					}
+					else if (move2->type==3)
+					{
+						filCard(move2,ENNEMIE,generalInfo);	
+					}
+					else if (move2->type==5)
+					{
+						filOjective(generalInfo,move,move2,ENNEMIE);;
+					}
 				}
 
 				generalInfo->PlayerTurn=0;

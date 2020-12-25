@@ -37,6 +37,9 @@ int chooseColor(t_objective objective, t_GeneralInfo* generalInfo, t_Player* YOU
 
 int chooseColorIfNotTheFirst(t_objective objective, t_GeneralInfo* generalInfo);
 
+int finishmove(t_move* move, t_GeneralInfo* generalInfo, t_Player* YOU, t_Player* ENNEMIE, int* replay);
+
+
 
 
 void trueAlgo(t_objective objective, t_GeneralInfo* generalInfo);

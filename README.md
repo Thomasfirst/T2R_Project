@@ -23,13 +23,14 @@ Le programme fonctionne de la manière suivante:
   Si la route et multicolor on pose les carte que l’on a le plus et d’on on pas besoin.
   Bien sûr, on optimise les cartes qu’il nous faut pour les prochaines prises de routes.
   Les locomotives sont utilisées dès que possible, ça serait bête de perdre en en gardant toujours sous le coude.
+  
     Pour les prochain objectif on fait pareil.
     
-  Il y a des sécurités si l'ennemi avance trop vite( il a peu de wagons restant...) on pose toutes nos cartes le plus vite possible pour ne pas perdre de points.
+    Il y a des sécurités si l'ennemi avance trop vite( il a peu de wagons restant...) on pose toutes nos cartes le plus vite possible pour ne pas perdre de points.
     Quand on a fini nos objectifs, on utilise le second morceau de l'algorithme.
-  Il permet de placer les routes qui valent le plus de points.
-  Évidemment on regarde si ces routes sont prises ou pas pour piocher les bonnes couleurs.
-  On essaye d’en prendre le plus possible jusqu'à la fin(on a plus de wagon).
+    Il permet de placer les routes qui valent le plus de points.
+    Évidemment on regarde si ces routes sont prises ou pas pour piocher les bonnes couleurs.
+    On essaye d’en prendre le plus possible jusqu'à la fin(on a plus de wagon).
   
   On a plus de 70% de chance de gagner contre nice_bot normalement.
 

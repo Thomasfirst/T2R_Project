@@ -12,52 +12,44 @@ void initialisation(t_Game_Board* LePlateau,t_Player* YOU,t_Player* ENNEMIE,t_Ge
 
 	char serverName[] = "li1417-56.members.linode.com";
 	unsigned int port = 5678;	//or 5678 or 1234
-	char name[] = "testingBot";
+	char name[] = "Lord";
 
 	char gameName[] = "TestDePartieThomas";
-	char gameType[] = "TRAINING PLAY_RANDOM map=USA start=0 timeout=80";
+	char gameType[] = "TRAINING NICE_BOT map=USA start=0 timeout=80";	/*PLAY_RANDOM	NICE_BOT*/
 	
-	/*t_Game_Board LePlateau;		 describe struct t_Game_Board*/
+	/*		 describe struct t_Game_Board*/
 	LePlateau->nbCities=0;
 	LePlateau->nbTracks=0;
 
-	// connectToServer(char* serverName, unsigned int port, char* name);
 	connectToServer(serverName,port,name);
 
-	// waitForT2RGame(char* gameType, char* gameName, int* nbCities, int* nbTracks);
 	waitForT2RGame(gameType,gameName,&LePlateau->nbCities,&LePlateau->nbTracks);
 
 
-		/*t_Player YOU;		your info*/
+		/*		your info*/
 	YOU->nbWagons=45;
 	YOU->nbCards=4;
 	YOU->nbObective=0;
 	for (t_color i = 0; i < 10; ++i)
 		YOU->TabOfCards[i]=0;
-	// t_objective TabOfObjetive[20];
 
-		/*t_Player ENNEMIE;		ennemie info*/
+		/*	ennemie info*/
 	ENNEMIE->nbWagons=45;
 	ENNEMIE->nbCards=4;
 	ENNEMIE->nbObective=0;
 	for (t_color i = 0; i < 10; ++i)
 		ENNEMIE->TabOfCards[i]=0;
-	// t_objective TabOfObjetive[20];
 
-		/*t_GeneralInfo generalInfo;		info of the game*/
+		/*		info of the game*/
 	generalInfo->PlayerTurn=1;		
 	generalInfo->YourNumber=0;
-	//t_color faceUp[5];
 	generalInfo->theGameBoard=LePlateau;
-	//int TwoPlayer[2];
 
 	t_color cards[4];
-	//int tracks[LePlateau->nbTracks*5];
 	int* tracks = malloc((LePlateau->nbTracks*5) * sizeof(int));
 	for (int i = 0; i < LePlateau->nbTracks*5; ++i)
 		tracks[i]=0;
 
-	// getMap(int* tracks, t_color faceUp[5], t_color cards[4]);
 	generalInfo->PlayerTurn = getMap(tracks, generalInfo->faceUp, cards);
 	YOU->TabOfCards[cards[0]]+=1;		/*import the 4 first draw*/
 	YOU->TabOfCards[cards[1]]+=1;

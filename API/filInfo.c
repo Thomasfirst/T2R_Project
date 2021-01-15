@@ -7,11 +7,6 @@
 #include "headers.h"
 
 
-// void filInfoPlayer(t_Player* Player,int nbWagons,int nbCards,t_color TabOfCards[10],t_objective TabOfObjetive[20]){
-// 	Player->nbWagons=Player->nbWagons-nbWagons;
-// 	Player->nbCards=Player->nbCards+nbCards;
-// 	Player->TabOfCards
-// }
 
 void filOjective(t_GeneralInfo* generalInfo,t_move* move,t_move* move2,t_Player* YOU){
 	for (int i = 0; i < 3; ++i)

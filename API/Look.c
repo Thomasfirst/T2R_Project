@@ -9,7 +9,7 @@
 
 
 
-void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
+void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){	/*show all the info */
 	printf("Le nombre de villes:%d \n",generalInfo->theGameBoard->nbCities); 	//LePlateau->nbCities);
 	printf("Le nombre de vois:%d \n",generalInfo->theGameBoard->nbTracks);
 	
@@ -46,7 +46,7 @@ void showMe(t_Game_Board* LePlateau, t_Player* YOU, t_GeneralInfo* generalInfo){
 	}
 }
 
-void lookMove(t_move* move){
+void lookMove(t_move* move){	/*show what you or ennemies had do*/
 
 	if (move->type==1)
 	{

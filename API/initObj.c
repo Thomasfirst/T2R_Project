@@ -13,11 +13,9 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 	t_move* move2 = malloc(sizeof(t_move));
 
 	t_return_code TestPassWinLose = 0;
-	//t_objective* obj = malloc(3 * sizeof(t_objective));
 
 	if (generalInfo->PlayerTurn == 1)
 	{
-		// t_return_code getMove(t_move* move, int* replay);
 		TestPassWinLose = getMove(move,&replay);
 		lookMove(move);
 		if(replay)
@@ -31,12 +29,9 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 
 
 
-		//t_return_code validity = drawObjectives(t_objective obj[3]);
 		move->type=4;
 		TestPassWinLose = playTheMove(move);
 
-		// TestPassWinLose = drawObjectives(obj);		
-		// int objectiveCards[3];
 		if (move->drawObjectives.objectives[0].score < move->drawObjectives.objectives[1].score){		// Take the 2 obj whith the less points
 			move2->chooseObjectives.chosen[0]=1;
 			YOU->TabOfObjetive[0]=move->drawObjectives.objectives[0];
@@ -66,8 +61,6 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 			}
 		}
 
-		//t_return_code chooseObjectives(int objectiveCards[3]);
-		//TestPassWinLose = chooseObjectives(objectiveCards);
 		move2->type=5;
 		TestPassWinLose = playTheMove(move2);
 
@@ -77,12 +70,9 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 	}
 
 	else{
-		//t_return_code validity = drawObjectives(t_objective obj[3]);
 		move->type=4;
 		TestPassWinLose = playTheMove(move);
 
-		// TestPassWinLose = drawObjectives(obj);		
-		// int objectiveCards[3];
 		if (move->drawObjectives.objectives[0].score < move->drawObjectives.objectives[1].score){		// Take the 2 obj whith the less points
 			move2->chooseObjectives.chosen[0]=1;
 			YOU->TabOfObjetive[0]=move->drawObjectives.objectives[0];
@@ -112,8 +102,6 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 			}
 		}
 
-		//t_return_code chooseObjectives(int objectiveCards[3]);
-		//TestPassWinLose = chooseObjectives(objectiveCards);
 		move2->type=5;
 		TestPassWinLose = playTheMove(move2);
 
@@ -126,7 +114,6 @@ void initObj(t_Player* YOU,t_GeneralInfo* generalInfo,t_Player* ENNEMIE){		// no
 	{
 		printf("probleme il y a un vainceur/perdant %d \n", TestPassWinLose);
 	}
-	//free(obj);
 	free(move);
 	free(move2);
 }

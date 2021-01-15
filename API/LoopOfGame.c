@@ -8,7 +8,7 @@
 
 
 
-void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
+void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){	/* loop for play manually*/
 	// t_move move ;//
 	t_move* move = malloc(sizeof(t_move));
 	t_move* move2 = malloc(sizeof(t_move));
@@ -16,16 +16,16 @@ void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 	int replay=1;
 	t_return_code TestPassWinLose = 0;
 
-	t_road roadToPlace;
+	//t_road roadToPlace;
 
 	int ScanAction = 0;		// for claim a road 
 	int ScanAction2 = 0;	
 
 	while(TestPassWinLose == 0){
 		printMap();
-		roadToPlace = algo_one_road( YOU->TabOfObjetive[0], generalInfo);
+		//roadToPlace = algo_one_road( YOU->TabOfObjetive[0], generalInfo);
 
-		int test = chooseColor(YOU->TabOfObjetive[0], generalInfo, YOU);
+		//int test = chooseColor(YOU->TabOfObjetive[0], generalInfo, YOU);
 
 		if (generalInfo->PlayerTurn==0)
 		{
@@ -192,7 +192,7 @@ void LoopOfGame(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 
 
 
-void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
+void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){	/*automatic loop playing all the function*/
 	// t_move move ;//
 	t_move* move = malloc(sizeof(t_move));
 	t_move* move2 = malloc(sizeof(t_move));
@@ -211,6 +211,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 
 	int colorToDraw = 0; 
 
+	t_objective objectiveColorToDraw;
+
 	while(TestPassWinLose == 0){
 		printMap();
 
@@ -222,6 +224,7 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				break;
 			roadToPlace = algo_one_road( YOU->TabOfObjetive[iObj], generalInfo);
 			colorToDraw = chooseColorIfNotTheFirst( YOU->TabOfObjetive[iObj], generalInfo);
+			objectiveColorToDraw = YOU->TabOfObjetive[iObj];
 			colorIfNoColor = chooseColor( YOU->TabOfObjetive[iObj], generalInfo, YOU);
 			
 
@@ -234,14 +237,20 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				}
 				roadToPlace = algo_one_road( YOU->TabOfObjetive[iObj -1], generalInfo);	/*next objective*/
 				colorToDraw = chooseColorIfNotTheFirst( YOU->TabOfObjetive[iObj - 1], generalInfo);
+				objectiveColorToDraw = YOU->TabOfObjetive[iObj - 1];
 				colorIfNoColor = chooseColor( YOU->TabOfObjetive[iObj -1], generalInfo, YOU);
 				break;
 			}
 		}
 		
+		if (ENNEMIE->nbWagons <= 11)
+		{
+			finishObjective=1;
+		}
 
 		if (generalInfo->PlayerTurn==0)
 		{
+			//printf("you play\n");
 			if (finishObjective == 0)
 			{
 			
@@ -259,6 +268,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 						move->claimRoute.nbLocomotives = 0;	
 
 						TestPassWinLose = playTheMove(move);
+						if (TestPassWinLose != 0)
+							break;
 						filClaimRoad(generalInfo,move,YOU);
 						replayYou = 0;
 					}
@@ -274,6 +285,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					move->claimRoute.nbLocomotives = 0;	
 
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filClaimRoad(generalInfo,move,YOU);
 					replayYou = 0;
 				}
@@ -287,6 +300,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
 
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filClaimRoad(generalInfo,move,YOU);
 					replayYou = 0;
 				}
@@ -304,6 +319,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					move->claimRoute.nbLocomotives = 0;	
 
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filClaimRoad(generalInfo,move,YOU);
 					replayYou = 0;
 				}
@@ -320,6 +337,8 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					move->claimRoute.nbLocomotives = YOU->TabOfCards[9];	
 
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filClaimRoad(generalInfo,move,YOU);
 					replayYou = 0;
 				}
@@ -336,11 +355,13 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 						{
 							move->type=3;
 							move->drawCard.card = generalInfo->faceUp[i];
-							lookMove(move);
+							//lookMove(move);
 							TestPassWinLose = playTheMove(move);
+							if (TestPassWinLose != 0)
+								break;
 							filCard(move,YOU,generalInfo);
 							replayYou -= 1;	/* 2 main you can play again*/
-							lookMove(move);
+							//lookMove(move);
 							break;
 						}
 					}
@@ -353,11 +374,13 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 							{
 								move->type=3;
 								move->drawCard.card = generalInfo->faceUp[i];
-								lookMove(move);
+								//lookMove(move);
 								TestPassWinLose = playTheMove(move);
+								if (TestPassWinLose != 0)
+									break;
 								filCard(move,YOU,generalInfo);
 								replayYou -= 1;	/* 2 main you can play again*/
-								lookMove(move);printf("le nb2\n");
+								//lookMove(move);//printf("le nb2\n");
 								break;
 							}
 						}
@@ -369,48 +392,58 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 
 				if ((replayYou == 2)&& (colorToDraw != 0))	/* drawn an other road we need for objective*/
 				{
-					printf("%d colorToDraw\n", colorToDraw);
+					//printf("%d colorToDraw\n", colorToDraw);
 					for (int i = 0; i < 5; ++i) /*found a card we need*/
 					{
 						if ((generalInfo->faceUp[i] == colorToDraw))
 						{
 							move->type=3;
 							move->drawCard.card = generalInfo->faceUp[i];
-							lookMove(move);
+							//lookMove(move);
 							TestPassWinLose = playTheMove(move);
+							if (TestPassWinLose != 0)
+								break;
 							filCard(move,YOU,generalInfo);
-							replayYou -= 1;	/* 2 main you can play again*/
+							replayYou -= 1;	/* 2 means you can play again*/
 							break;
 						}
 					}
-					// if ((replayYou==1)&& (colorToDraw != 0))	/* 2nd draw  add 50% effectivness*/
-					// {
-					// 	for (int i = 0; i < 5; ++i)
-					// 	{
-					// 		if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
-					// 		{
-					// 			move->type=3;
-					// 			move->drawCard.card = generalInfo->faceUp[i];
-					// 			lookMove(move);
-					// 			TestPassWinLose = playTheMove(move);
-					// 			filCard(move,YOU,generalInfo);
-					// 			replayYou -= 1;	/* end move*/
-					// 			break;
-					// 		}
-					// 	}
-					// }	
+					if ((replayYou==1))	/* 2nd draw  add 50% effectivness(if you have luck of course)*/
+					{
+						colorToDraw = chooseColorIfNotTheFirst( objectiveColorToDraw, generalInfo);
+						if ((colorToDraw != 0))
+						{
+							for (int i = 0; i < 5; ++i)
+							{
+								if ((generalInfo->faceUp[i] == colorToDraw) || (generalInfo->faceUp[i] == colorToDraw))
+								{
+									move->type=3;
+									move->drawCard.card = generalInfo->faceUp[i];
+									//lookMove(move);
+									TestPassWinLose = playTheMove(move);
+									if (TestPassWinLose != 0)
+										break;
+									filCard(move,YOU,generalInfo);
+									replayYou -= 1;	/* end move*/
+									break;
+								}
+							}
+						}
+					}	
 				}
 				else if ((replayYou == 1)&& (colorToDraw != 0))	/* if we have only 1 move found a card we need*/
 				{
-					printf("%d colorToDraw\n", colorToDraw);
+					//printf("%d colorToDraw\n", colorToDraw);
 					for (int i = 0; i < 5; ++i)
 					{
 						if ((generalInfo->faceUp[i] == colorToDraw) )
 						{
 							move->type=3;
 							move->drawCard.card = generalInfo->faceUp[i];
-							lookMove(move);
+							//lookMove(move);
 							TestPassWinLose = playTheMove(move);
+							if (TestPassWinLose != 0)
+							break;
 							filCard(move,YOU,generalInfo);
 							replayYou -= 1;	/* end move*/
 							break;
@@ -421,28 +454,34 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 
 				/*-----*/
 
-				if (replayYou == 2)	/* draw blind if ne other chose x2 */
+				if (replayYou == 2)	/* draw blind if no other chose x2 */
 				{
 					move->type=2;
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filBlindCard(generalInfo,move,YOU);	
-					lookMove(move);
+					//lookMove(move);
 
 					replayYou -= 1;
 
 					move->type=2;
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filBlindCard(generalInfo,move,YOU);	
-					lookMove(move);
+					//lookMove(move);
 
 					replayYou -= 1;
 				}
-				if (replayYou == 1) /* draw blind if ne other chose x1 */
+				if (replayYou == 1) /* draw blind if no other chose x1 */
 				{
 					move->type=2;
 					TestPassWinLose = playTheMove(move);
+					if (TestPassWinLose != 0)
+							break;
 					filBlindCard(generalInfo,move,YOU);	
-					lookMove(move);
+					//lookMove(move);
 
 					replayYou -= 1;
 				}
@@ -453,12 +492,12 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 			int the_end;
 			if (finishObjective == 1)
 			{
-				printf("OMG CA FONCTIONNE \nOMG CA FONCTIONNE \nOMG CA FONCTIONNE \n");
+				//printf("OMG CA FONCTIONNE \nOMG CA FONCTIONNE \nOMG CA FONCTIONNE \n");
 
 
 				the_end = finishmove(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
-				printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
-				lookMove(move);
+				//printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+				//lookMove(move);
 
 				TestPassWinLose = playTheMove(move);
 
@@ -474,13 +513,15 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				{
 					filCard(move,YOU,generalInfo);
 				}
+				if (TestPassWinLose != 0)
+							break;
 					
 
 				if (replayToEnd == 1)
 				{
 					the_end = finishmove(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
-					printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
-					lookMove(move);
+					//printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+					//lookMove(move);
 
 					TestPassWinLose = playTheMove(move);
 					if (move->type == 1)
@@ -494,7 +535,9 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					if (move->type == 3)
 					{
 						filCard(move,YOU,generalInfo);
-					}	
+					}
+					if (TestPassWinLose != 0)
+							break;	
 				}
 			}
 
@@ -507,10 +550,190 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 		else {
 			if (generalInfo->PlayerTurn==1)
 			{
-				printf("ENNEMIE\n");
+				//printf("ENNEMIE\n");
 				// t_return_code getMove(t_move* move, int* replay);
 				TestPassWinLose = getMove(move,&replayEnnemie);
-				lookMove(move);
+				if (TestPassWinLose != 0)
+						break;
+				
+				//lookMove(move);
+				if (move->type==1)
+				{
+					filClaimRoad(generalInfo,move,ENNEMIE);
+					if (replayEnnemie !=0)
+					{
+						printf("L'ENNEMIE TRICHE !!!!!\n");/*oui a moment donnes il tentais des choses pas net*/
+						TestPassWinLose =1;
+					}
+				}
+				else if (move->type==2)
+				{
+					filBlindCard(generalInfo,move,ENNEMIE);
+				}
+				else if (move->type==3)
+				{
+					filCard(move,ENNEMIE,generalInfo);	
+				}
+				else if (move->type==4)
+				{
+					replayEnnemie=1;	//take objectiv
+				}
+				if (TestPassWinLose != 0){
+					break;
+				}
+
+		
+				if(replayEnnemie){
+					TestPassWinLose = getMove(move2,&replayEnnemie);
+					if (TestPassWinLose != 0)
+						break;
+					
+					//lookMove(move2);
+
+					if (move2->type==1)
+					{
+						filClaimRoad(generalInfo,move2,ENNEMIE);
+						printf("L'ENNEMIE TRICHE 22!!!!!\n" );
+						TestPassWinLose =1;
+
+					}
+					else if (move2->type==2)
+					{
+						filBlindCard(generalInfo,move2,ENNEMIE);
+					}
+					else if (move2->type==3)
+					{
+						filCard(move2,ENNEMIE,generalInfo);	
+					}
+					else if (move2->type==5)
+					{
+						filOjective(generalInfo,move,move2,ENNEMIE);;
+					}
+					if (TestPassWinLose != 0){
+						break;
+					}
+					
+				}
+
+				generalInfo->PlayerTurn=0;
+
+			}
+		}
+	}
+	free(move);
+	free(move2);
+
+	if ((TestPassWinLose == 1 && generalInfo->PlayerTurn==0) || (TestPassWinLose == -1 && generalInfo->PlayerTurn==1))
+	{
+		printf("  \n");
+		printf(" 	_____ ___                __      __ __        			\n");
+		printf("	\\__  |   | ____  __ __  /  \\    /  \\__| ____  		\n");
+ 		printf("	 /   |   |/  _ \\|  |  \\ \\   \\/\\/   /  |/    \\ 	\n");
+		printf("	 \\____   (  <_> )  |  /  \\        /|  |   |  \\ 		\n");
+		printf("	 / ______|\\____/|____/    \\__/\\  / |__|___|  / 		\n");
+		printf("	 \\/                            \\/          \\/  		\n");
+		printf("  \n");
+	}
+	if ((TestPassWinLose == 1 && generalInfo->PlayerTurn==1) || (TestPassWinLose == -1 && generalInfo->PlayerTurn==0))
+	{
+		printf("  \n");
+		printf("	_____ ___                ____                        		\n");
+		printf("	\\__  |   | ____  __ __  |    |    ____  ______ ____  		\n");
+ 		printf("	 /   |   |/  _ \\|  |  \\ |    |   /  _ \\/  ___// __ \\ 	\n");
+ 		printf("	 \\____   (  <_> )  |  / |    |__(  <_> )___ \\\\  ___/ 		\n");
+ 		printf("	 / ______|\\____/|____/  |_______ \\____/____  >\\___  >	\n");
+ 		printf("	 \\/                             \\/         \\/     \\/ 	\n");
+ 		printf("  \n");
+	}
+
+
+}
+
+
+
+
+
+void LoopOfGameAutoNEW(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){	/*automatic loop playing all the function try to finish quick*/
+	// t_move move ;//
+	t_move* move = malloc(sizeof(t_move));
+	t_move* move2 = malloc(sizeof(t_move));
+
+	int replayEnnemie=1;
+
+	t_return_code TestPassWinLose = 0;
+
+	while(TestPassWinLose == 0){
+		printMap();
+
+
+			int replayToEnd = 2;// 2 its for 2 move
+			int the_end;
+
+				if (generalInfo->PlayerTurn==0)
+				{
+
+					the_end = finishmove2(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
+					//printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+					//lookMove(move);
+
+					TestPassWinLose = playTheMove(move);
+
+					if (move->type == 1)
+					{
+						filClaimRoad(generalInfo,move,YOU);
+					}
+					if (move->type == 2)
+					{
+						filBlindCard(generalInfo,move,YOU);
+					}
+					if (move->type == 3)
+					{
+						filCard(move,YOU,generalInfo);
+					}
+					if (TestPassWinLose != 0)
+								break;
+						
+
+					if (replayToEnd == 1)
+					{
+						the_end = finishmove2(move, generalInfo,  YOU,  ENNEMIE,  &replayToEnd);
+						//printf("the_end = %d and replayToEnd= %d \n", the_end, replayToEnd);
+						//lookMove(move);
+
+						TestPassWinLose = playTheMove(move);
+						if (move->type == 1)
+						{
+							filClaimRoad(generalInfo,move,YOU);
+						}
+						if (move->type == 2)
+						{
+							filBlindCard(generalInfo,move,YOU);
+						}
+						if (move->type == 3)
+						{
+							filCard(move,YOU,generalInfo);
+						}
+						if (TestPassWinLose != 0)
+								break;	
+					}
+			
+
+
+				//-------------------
+
+			generalInfo->PlayerTurn=1;	
+			}
+
+		else {
+			if (generalInfo->PlayerTurn==1)
+			{
+				//printf("ENNEMIE\n");
+				// t_return_code getMove(t_move* move, int* replay);
+				TestPassWinLose = getMove(move,&replayEnnemie);
+				if (TestPassWinLose != 0)
+						break;
+				
+				//lookMove(move);
 				if (move->type==1)
 				{
 					filClaimRoad(generalInfo,move,ENNEMIE);
@@ -532,11 +755,17 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 				{
 					replayEnnemie=1;	//take objectiv
 				}
+				if (TestPassWinLose != 0){
+					break;
+				}
 
 		
 				if(replayEnnemie){
 					TestPassWinLose = getMove(move2,&replayEnnemie);
-					lookMove(move2);
+					if (TestPassWinLose != 0)
+						break;
+					
+					//lookMove(move2);
 
 					if (move2->type==1)
 					{
@@ -557,6 +786,10 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 					{
 						filOjective(generalInfo,move,move2,ENNEMIE);;
 					}
+					if (TestPassWinLose != 0){
+						break;
+					}
+					
 				}
 
 				generalInfo->PlayerTurn=0;
@@ -566,4 +799,27 @@ void LoopOfGameAuto(t_GeneralInfo* generalInfo,t_Player* YOU,t_Player* ENNEMIE){
 	}
 	free(move);
 	free(move2);
+
+	if ((TestPassWinLose == 1 && generalInfo->PlayerTurn==0) || (TestPassWinLose == -1 && generalInfo->PlayerTurn==1))
+	{
+		printf("  \n");
+		printf(" 	_____ ___                __      __ __        			\n");
+		printf("	\\__  |   | ____  __ __  /  \\    /  \\__| ____  		\n");
+ 		printf("	 /   |   |/  _ \\|  |  \\ \\   \\/\\/   /  |/    \\ 	\n");
+		printf("	 \\____   (  <_> )  |  /  \\        /|  |   |  \\ 		\n");
+		printf("	 / ______|\\____/|____/    \\__/\\  / |__|___|  / 		\n");
+		printf("	 \\/                            \\/          \\/  		\n");
+		printf("  \n");
+	}
+	if ((TestPassWinLose == 1 && generalInfo->PlayerTurn==1) || (TestPassWinLose == -1 && generalInfo->PlayerTurn==0))
+	{
+		printf("  \n");
+		printf("	_____ ___                ____                        		\n");
+		printf("	\\__  |   | ____  __ __  |    |    ____  ______ ____  		\n");
+ 		printf("	 /   |   |/  _ \\|  |  \\ |    |   /  _ \\/  ___// __ \\ 	\n");
+ 		printf("	 \\____   (  <_> )  |  / |    |__(  <_> )___ \\\\  ___/ 		\n");
+ 		printf("	 / ______|\\____/|____/  |_______ \\____/____  >\\___  >	\n");
+ 		printf("	 \\/                             \\/         \\/     \\/ 	\n");
+ 		printf("  \n");
+	}
 }

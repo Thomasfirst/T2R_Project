@@ -12,7 +12,7 @@ typedef struct {
 	t_color color2;
 }t_road;
 
-typedef struct{		/* Nb ville Nb route tab des route*/
+typedef struct{		/* Nb cities Nb road array of road*/
 	int nbCities;
 	int nbTracks;
 	t_road* TabOfTracks;

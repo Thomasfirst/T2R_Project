@@ -7,7 +7,7 @@
 #include "headers.h"
 
 
-t_return_code playTheMove(t_move* move){
+t_return_code playTheMove(t_move* move){	/* play a move given*/
 	t_return_code TestPassWinLose = 0;
 
 	if (move->type==1)

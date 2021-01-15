@@ -257,7 +257,7 @@ t_return_code getMove(t_move* move, int* replay)
  */
 t_return_code claimRoute(int city1, int city2, int color, int nbLocomotives){
 	char msg[256];
-	char answer[MAX_GET_MOVE];
+	char answer[MAX_MESSAGE];
 	sprintf(msg, "1 %d %d %d %d", city1, city2, color, nbLocomotives);
 	return sendCGSMove(__FUNCTION__, msg, answer);
 }
@@ -328,7 +328,7 @@ t_return_code drawObjectives(t_objective obj[3]){
  */
 t_return_code chooseObjectives(int objectiveCards[3]){
 	char msg[MAX_GET_MOVE];
-	char answer[MAX_GET_MOVE];
+	char answer[MAX_MESSAGE];
 	/* send message */
 	sprintf(msg, "5 %d %d %d", objectiveCards[0], objectiveCards[1], objectiveCards[2]);
 	t_return_code ret = sendCGSMove(__FUNCTION__, msg, answer);

@@ -633,7 +633,7 @@ int finishmove2(t_move* move, t_GeneralInfo* generalInfo, t_Player* YOU, t_Playe
 
 	if (*replay == 2)
 	{
-		if (ENNEMIE->nbWagons <= 6 || YOU->nbWagons <= 6 || YOU->nbCards >= 30)/* panic we claim all we can*/
+		if (ENNEMIE->nbWagons <= 6 || YOU->nbWagons <= 6 || YOU->nbCards >= 30 || (YOU->nbWagons <= 15 && YOU->nbCards >= 24))/* panic we claim what we can*/
 		{
 			for (int pass_for_min = 6; pass_for_min > 0; --pass_for_min)
 			{

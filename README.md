@@ -2,6 +2,7 @@
 
 Ce repository contient les fichiers nécessaire au tournoi Polytech Sorbonne des *Aventuriers du rail* (Ticket to Ride).
 
+Pour lancer le programme 
 Le programme fonctionne de la manière suivante:
   On peut choisir entre trois algorithmes:
  

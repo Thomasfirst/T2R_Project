@@ -3,8 +3,8 @@
 Ce repository contient les fichiers nécessaire au tournoi Polytech Sorbonne des *Aventuriers du rail* (Ticket to Ride).
 
 Pour lancer le programme, télécharger le repository, puis le décompresser. Ensuite lancer le terminal dans le fichier API.
-Faire la commande “make” qui exécutera le makefile. Enfin lancer dans le terminal l'exécutable T2R_lExe.out avec la commande “ ./T2R_lExe.out ”. 
-( C'est bien un l pas un 1 ./T2R_lExe.out)
+Faire la commande “make” qui exécutera le makefile. Enfin lancer dans le terminal l'exécutable T2R_lExe.out avec la commande “ ./T2R_lExe.out ”.  
+  ( C'est bien un l pas un 1 ./T2R_lExe.out)
 
 Le programme fonctionne de la manière suivante:
   On peut choisir entre trois algorithmes:

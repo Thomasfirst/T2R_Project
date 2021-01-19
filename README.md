@@ -41,6 +41,7 @@ Le programme fonctionne de la manière suivante:
 
 
   - Le troisième algorithme
+  
   Il utilise la seconde partie de l’algorithme deux, mais est légèrement différent pour être optimiser. 
   En effet, il essaye de placer le plus de points possibles en un minimum de temps possibles. 
   Pour ce faire, il essaye de placer le maximum de route de 6 (celle qui rapportera le plus), en un minimum de tour. 

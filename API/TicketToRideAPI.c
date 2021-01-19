@@ -272,7 +272,8 @@ t_return_code drawBlindCard(t_color* card){
 	/* send message */
 	t_return_code ret = sendCGSMove(__FUNCTION__, "2", answer);
 	/* get card drawn */
-	sscanf(answer, "%d", (int*)card);
+	if (ret == NORMAL_MOVE)
+		sscanf(answer, "%d", (int*)card);
 
 	return ret;
 }
@@ -291,7 +292,8 @@ t_return_code drawCard(t_color card, t_color deck[5]){
 	sprintf(msg, "3 %d", card);
 	t_return_code ret = sendCGSMove(__FUNCTION__, msg, answer);
 	/* get the new deck */
-	sscanf(answer, "%d %d %d %d %d", (int*)deck, (int*)deck+1, (int*)deck+2, (int*)deck+3, (int*)deck+4);
+	if (ret == NORMAL_MOVE)
+		sscanf(answer, "%d %d %d %d %d", (int*)deck, (int*)deck+1, (int*)deck+2, (int*)deck+3, (int*)deck+4);
 
 	return ret;
 }
@@ -309,10 +311,12 @@ t_return_code drawObjectives(t_objective obj[3]){
 	/* send message */
 	t_return_code ret = sendCGSMove(__FUNCTION__, "4", answer);
 	/* get the new obj */
-	t_objective* p = obj;
-	for(int i=0;i<3;i++, p++) {
-		sscanf(str, "%d %d %d%n", &p->city1, &p->city2, &p->score, &nbchar);
-		str += nbchar;
+	if (ret == NORMAL_MOVE) {
+		t_objective *p = obj;
+		for (int i = 0; i < 3; i++, p++) {
+			sscanf(str, "%d %d %d%n", &p->city1, &p->city2, &p->score, &nbchar);
+			str += nbchar;
+		}
 	}
 
 	return ret;

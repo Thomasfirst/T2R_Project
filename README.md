@@ -50,9 +50,9 @@ Le programme fonctionne de la manière suivante:
   (normalement moins de 10, enfin c’est ce qu'on voudrait), pendant que l’adversaire perd des point a cause de ses objectif non accomplie et de plus 
   l’ennemie a un nombre de wagon important qui sont non placé. L'objectif est de finir vite avec le plus de points possible.
  
-  On a plus de 90% de chance de gagner contre nice_bot normalement.
+  On a plus de 90% de chance de gagner contre nice_bot normalement(et 2nd du tournoi c'est pas mal comme bot).
 
-
+  
 
 
 
